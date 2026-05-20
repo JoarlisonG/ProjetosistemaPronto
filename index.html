@@ -50,8 +50,6 @@ html, body { height: 100%; background: var(--bg-void); color: var(--text-primary
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,107,0,0.3); border-radius: 2px; }
-
-/* ─── FIX: app must fill height and each section must not overflow ─── */
 #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 #topbar { display: flex; align-items: center; gap: 16px; padding: 0 20px; height: 60px; background: var(--bg-deep); border-bottom: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 10; }
 #topbar::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.4; }
@@ -85,8 +83,6 @@ html, body { height: 100%; background: var(--bg-void); color: var(--text-primary
 .filter-chip.active { background: var(--accent-dim); border-color: var(--accent-border); color: var(--accent); }
 .chip-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .filter-sep { width: 1px; height: 18px; background: var(--border); margin: 0 4px; }
-
-/* ─── FIX SCROLL: board and columns use min-height:0 so flex children can scroll ─── */
 #board { display: flex; flex: 1; gap: 12px; overflow: hidden; padding: 16px; min-height: 0; }
 .column { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color var(--transition); }
 .column.drag-over { border-color: var(--accent-border); box-shadow: inset 0 0 30px rgba(255,107,0,0.05); }
@@ -96,25 +92,14 @@ html, body { height: 100%; background: var(--bg-void); color: var(--text-primary
 .col-title { font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .col-sub { font-family: var(--font-data); font-size: 11px; color: var(--text-muted); letter-spacing: 0.05em; margin-top: 2px; }
 .col-count { font-family: var(--font-data); font-size: 13px; font-weight: 600; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 2px 10px; color: var(--text-secondary); min-width: 30px; text-align: center; }
-
-/* ─── FIX: col-body must be able to scroll — needs flex:1 and overflow-y:auto ─── */
 .col-body { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
-
 .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 13px; cursor: grab; transition: all var(--transition); position: relative; overflow: hidden; user-select: none; display: flex; flex-direction: column; gap: 9px; }
 .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--col-color, var(--accent)); opacity: 0; transition: opacity var(--transition); }
 .card:hover { background: var(--bg-hover); border-color: rgba(255,255,255,0.1); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
 .card:hover::before { opacity: 1; }
 .card.dragging { opacity: 0.5; cursor: grabbing; transform: scale(0.98); }
-
-/* Red pulsing border for aguardando cards */
-.card.novo-entrada {
-  animation: cardPulseRed 1.2s ease-in-out infinite;
-}
-@keyframes cardPulseRed {
-  0%, 100% { border-color: rgba(239,68,68,0.2); box-shadow: none; }
-  50% { border-color: rgba(239,68,68,0.9); box-shadow: 0 0 18px rgba(239,68,68,0.4), inset 0 0 12px rgba(239,68,68,0.08); }
-}
-
+.card.novo-entrada { animation: cardPulseRed 1.2s ease-in-out infinite; }
+@keyframes cardPulseRed { 0%,100% { border-color: rgba(239,68,68,0.2); } 50% { border-color: rgba(239,68,68,0.9); box-shadow: 0 0 18px rgba(239,68,68,0.4); } }
 .card-head { display: flex; align-items: flex-start; gap: 8px; }
 .card-id { font-family: var(--font-data); font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 3px; padding: 2px 7px; flex-shrink: 0; }
 .card-ident { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--text-primary); letter-spacing: 0.04em; flex: 1; }
@@ -131,7 +116,7 @@ html, body { height: 100%; background: var(--bg-void); color: var(--text-primary
 .card-timer { font-family: var(--font-data); font-size: var(--font-size-xs); color: var(--text-muted); margin-left: auto; }
 .card-timer.warn { color: #f59e0b; }
 .card-timer.danger { color: #ef4444; animation: blink 1s step-end infinite; }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
 .card-actions { display: flex; gap: 6px; padding-top: 2px; border-top: 1px solid var(--border-subtle); }
 .card-actions .btn { flex: 1; font-size: var(--font-size-xs); height: 33px; justify-content: center; }
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
@@ -190,23 +175,20 @@ html, body { height: 100%; background: var(--bg-void); color: var(--text-primary
 .col-body::-webkit-scrollbar-thumb { background: rgba(255,107,0,0.2); border-radius: 2px; }
 #status-bar { display: flex; align-items: center; gap: 10px; padding: 5px 20px; background: var(--bg-deep); border-top: 1px solid var(--border-subtle); flex-shrink: 0; font-family: var(--font-data); font-size: 11px; color: var(--text-muted); letter-spacing: 0.06em; }
 .status-dot-live { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px #22c55e; animation: pulseDot 2s ease-in-out infinite; }
-@keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@keyframes pulseDot { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
 .loading-overlay { position: fixed; inset: 0; background: var(--bg-void); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9998; gap: 16px; transition: opacity 0.4s; }
 .loading-overlay.hidden { opacity: 0; pointer-events: none; }
 .loading-hex { width: 52px; height: 52px; background: var(--accent); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); animation: pulse 1.2s ease-in-out infinite; }
-@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);opacity:0.7;} }
 .loading-text { font-family: var(--font-data); font-size: 12px; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; }
 .section-sep { height: 1px; background: var(--border); margin: 4px 0; }
 .section-label { font-family: var(--font-data); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; margin-top: 4px; }
-
-/* ─── FIX: tab-nav and tab-content must respect height ─── */
 .tab-nav { display: flex; gap: 4px; padding: 0 20px; height: 50px; background: var(--bg-deep); border-bottom: 1px solid var(--border); align-items: center; flex-shrink: 0; }
 .tab-btn { padding: 8px 18px; background: transparent; border: none; color: var(--text-muted); font-family: var(--font-ui); font-weight: 600; font-size: 13px; letter-spacing: 0.06em; cursor: pointer; border-bottom: 2px solid transparent; transition: all var(--transition); text-transform: uppercase; }
 .tab-btn:hover { color: var(--text-primary); }
 .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
 .tab-content { display: none; flex: 1; overflow: hidden; flex-direction: column; min-height: 0; }
 .tab-content.active { display: flex; }
-
 .expedicao-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; padding: 20px; overflow-y: auto; }
 .expedicao-card { background: var(--bg-card); border: 2px solid var(--col-pronto); border-radius: var(--radius-lg); padding: 18px; display: flex; flex-direction: column; gap: 13px; }
 .expedicao-header { display: flex; align-items: center; gap: 12px; justify-content: space-between; }
@@ -226,33 +208,11 @@ html, body { height: 100%; background: var(--bg-void); color: var(--text-primary
 .pagamento-total { display: flex; justify-content: space-between; align-items: center; padding: 11px; background: var(--bg-surface); border-radius: var(--radius); border: 1px solid var(--border); }
 .pagamento-total-label { font-family: var(--font-data); font-size: 12px; color: var(--text-muted); text-transform: uppercase; }
 .pagamento-total-valor { font-family: var(--font-data); font-size: 18px; font-weight: 700; color: var(--accent); }
-.pagamento-forma { display: flex; flex-direction: column; gap: 8px; }
 .forma-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .forma-btn { padding: 11px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-secondary); font-family: var(--font-ui); font-weight: 600; font-size: 13px; cursor: pointer; transition: all var(--transition); text-transform: uppercase; }
 .forma-btn:hover { border-color: var(--accent-border); color: var(--text-primary); }
 .forma-btn.selected { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
-
-/* ─── PAGO badge on payment card ─── */
-.btn-pago-badge {
-  width: 100%;
-  height: 44px;
-  background: rgba(34,197,94,0.12);
-  border: 2px solid rgba(34,197,94,0.5);
-  border-radius: var(--radius);
-  color: #22c55e;
-  font-family: var(--font-ui);
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: default;
-  pointer-events: none;
-}
-
+.btn-pago-badge { width: 100%; height: 44px; background: rgba(34,197,94,0.12); border: 2px solid rgba(34,197,94,0.5); border-radius: var(--radius); color: #22c55e; font-family: var(--font-ui); font-weight: 700; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: default; pointer-events: none; }
 .admin-container { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
 .admin-tabs { display: flex; gap: 0; padding: 0 20px; height: 46px; background: var(--bg-surface); border-bottom: 1px solid var(--border); align-items: center; flex-shrink: 0; overflow-x: auto; }
 .admin-tab-btn { padding: 8px 18px; background: transparent; border: none; color: var(--text-muted); font-family: var(--font-ui); font-weight: 600; font-size: 13px; cursor: pointer; border-bottom: 2px solid transparent; transition: all var(--transition); text-transform: uppercase; white-space: nowrap; }
@@ -283,8 +243,6 @@ html, body { height: 100%; background: var(--bg-void); color: var(--text-primary
 .pin-key:hover { background: var(--bg-hover); border-color: var(--accent-border); }
 .pin-key.delete { grid-column: span 3; background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); color: #ef4444; }
 .pin-key.delete:hover { background: rgba(239,68,68,0.2); border-color: #ef4444; }
-
-/* ─── PDV / NOVO PEDIDO MODAL ─── */
 .pdv-layout { display: grid; grid-template-columns: 1fr 300px; gap: 16px; min-height: 400px; }
 .pdv-search-area { display: flex; flex-direction: column; gap: 10px; }
 .pdv-search-input-wrap { display: flex; align-items: center; gap: 8px; background: var(--bg-surface); border: 1px solid var(--accent-border); border-radius: var(--radius); padding: 0 12px; height: 44px; }
@@ -297,7 +255,6 @@ html, body { height: 100%; background: var(--bg-void); color: var(--text-primary
 .pdv-item-row .item-preco { font-family: var(--font-data); font-size: var(--font-size-sm); color: var(--accent); }
 .pdv-item-row .item-add-btn { width: 26px; height: 26px; background: var(--accent); border: none; border-radius: 4px; color: #000; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .pdv-empty-cardapio { padding: 24px; text-align: center; color: var(--text-muted); font-family: var(--font-data); font-size: 12px; }
-
 .pdv-comanda { display: flex; flex-direction: column; gap: 8px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
 .pdv-comanda-title { font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
 .pdv-comanda-items { flex: 1; display: flex; flex-direction: column; gap: 4px; max-height: 260px; overflow-y: auto; }
@@ -311,7 +268,6 @@ html, body { height: 100%; background: var(--bg-void); color: var(--text-primary
 .pdv-comanda-total-label { font-family: var(--font-data); font-size: 12px; color: var(--text-muted); text-transform: uppercase; }
 .pdv-comanda-total-valor { font-family: var(--font-data); font-size: 16px; font-weight: 700; color: var(--accent); }
 .pdv-comanda-empty { padding: 16px; text-align: center; color: var(--text-muted); font-family: var(--font-data); font-size: 11px; }
-
 @media (max-width: 1024px) { .config-grid { grid-template-columns: 1fr; } .forma-buttons { grid-template-columns: 1fr; } .expedicao-grid, .pagamentos-grid { grid-template-columns: 1fr; } .pdv-layout { grid-template-columns: 1fr; } }
 @media (max-width: 768px) { #board { gap: 8px; padding: 8px; } .column { min-width: 280px; } }
 </style>
@@ -608,7 +564,7 @@ html, body { height: 100%; background: var(--bg-void); color: var(--text-primary
   </div>
 </div>
 
-<!-- MODAL NOVO PEDIDO (PDV com busca de cardápio) -->
+<!-- MODAL NOVO PEDIDO -->
 <div class="modal-overlay" id="modal-novo">
   <div class="modal" style="max-width:720px;">
     <div class="modal-header">
@@ -635,7 +591,6 @@ html, body { height: 100%; background: var(--bg-void); color: var(--text-primary
       </div>
 
       <div class="pdv-layout">
-        <!-- Lado esquerdo: busca de produtos -->
         <div class="pdv-search-area">
           <div class="form-label">Buscar produto do cardápio</div>
           <div class="pdv-search-input-wrap">
@@ -645,7 +600,6 @@ html, body { height: 100%; background: var(--bg-void); color: var(--text-primary
           <div class="pdv-items-list" id="pdv-items-list">
             <div class="pdv-empty-cardapio">Nenhum produto no cardápio.<br>Adicione itens na aba Admin → Cardápio.</div>
           </div>
-          <!-- Observação manual -->
           <div class="form-group" style="margin-top:4px;">
             <label class="form-label">Observação / item avulso</label>
             <div style="display:flex;gap:8px;">
@@ -655,7 +609,6 @@ html, body { height: 100%; background: var(--bg-void); color: var(--text-primary
           </div>
         </div>
 
-        <!-- Lado direito: comanda -->
         <div class="pdv-comanda">
           <div class="pdv-comanda-title">Comanda</div>
           <div class="pdv-comanda-items" id="pdv-comanda-items">
@@ -763,7 +716,6 @@ db.version(1).stores({
   config: 'chave'
 });
 
-// Variáveis globais do sistema
 let todosPedidos = [];
 let todasComandas = [];
 let todosPagamentos = [];
@@ -782,10 +734,9 @@ let timerInterval = null;
 let pinInput = '';
 let adminAutenticado = false;
 
-// PDV state
-let pdvComanda = []; // [{nome, preco, qty, obs}]
+let pdvComanda = [];
 
-// ================= FUNÇÕES PRINCIPAIS DO SISTEMA (ORIGINAIS, SEM ALTERAÇÕES) =================
+// ================= FUNÇÕES PRINCIPAIS =================
 async function init() {
   try {
     const configData = await db.config.toArray();
@@ -1061,7 +1012,7 @@ async function onDrop(e, status) {
   }
 }
 
-// ─── PDV (Novo Pedido com busca de cardápio) ─────────────────────────────────
+// PDV (Novo Pedido)
 function abrirModalNovoPedido() {
   pdvComanda = [];
   document.getElementById('novo-ident').value = '';
@@ -1079,18 +1030,12 @@ function atualizarPlaceholderIdent() {
   document.getElementById('novo-ident').placeholder = map[tipo] || 'Identificação';
 }
 
-function filtrarPDV() {
-  renderPDVItems();
-}
+function filtrarPDV() { renderPDVItems(); }
 
 function renderPDVItems() {
   const lista = document.getElementById('pdv-items-list');
   const q = (document.getElementById('pdv-search')?.value || '').toLowerCase().trim();
-
-  const itens = q
-    ? cardapio.filter(i => i.nome.toLowerCase().includes(q))
-    : cardapio;
-
+  const itens = q ? cardapio.filter(i => i.nome.toLowerCase().includes(q)) : cardapio;
   if (cardapio.length === 0) {
     lista.innerHTML = `<div class="pdv-empty-cardapio">Nenhum produto no cardápio.<br>Adicione itens na aba Admin → Cardápio.</div>`;
     return;
@@ -1099,12 +1044,9 @@ function renderPDVItems() {
     lista.innerHTML = `<div class="pdv-empty-cardapio">Nenhum produto encontrado para "<strong>${q}</strong>"</div>`;
     return;
   }
-
   lista.innerHTML = itens.map(i => `
     <div class="pdv-item-row" onclick="adicionarAoPDV('${escStr(i.nome)}', ${i.preco})">
-      <div>
-        <div class="item-nome">${i.nome}</div>
-      </div>
+      <div><div class="item-nome">${i.nome}</div></div>
       <div style="display:flex;align-items:center;gap:10px;">
         <span class="item-preco">R$ ${parseFloat(i.preco).toFixed(2).replace('.',',')}</span>
         <button class="item-add-btn" onclick="event.stopPropagation();adicionarAoPDV('${escStr(i.nome)}', ${i.preco})">+</button>
@@ -1113,17 +1055,12 @@ function renderPDVItems() {
   `).join('');
 }
 
-function escStr(s) {
-  return s.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-}
+function escStr(s) { return s.replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
 
 function adicionarAoPDV(nome, preco) {
   const existente = pdvComanda.find(i => i.nome === nome && !i.obs);
-  if (existente) {
-    existente.qty = (existente.qty || 1) + 1;
-  } else {
-    pdvComanda.push({ nome, preco: parseFloat(preco) || 0, qty: 1, obs: false });
-  }
+  if (existente) existente.qty = (existente.qty || 1) + 1;
+  else pdvComanda.push({ nome, preco: parseFloat(preco) || 0, qty: 1, obs: false });
   renderPDVComanda();
   toast(`${nome} adicionado`, 'success');
 }
@@ -1136,21 +1073,16 @@ function adicionarObsManual() {
   renderPDVComanda();
 }
 
-function removerDoPDV(idx) {
-  pdvComanda.splice(idx, 1);
-  renderPDVComanda();
-}
+function removerDoPDV(idx) { pdvComanda.splice(idx, 1); renderPDVComanda(); }
 
 function renderPDVComanda() {
   const container = document.getElementById('pdv-comanda-items');
   const totalEl = document.getElementById('pdv-total');
-
   if (pdvComanda.length === 0) {
     container.innerHTML = `<div class="pdv-comanda-empty">Nenhum item adicionado</div>`;
     totalEl.textContent = 'R$ 0,00';
     return;
   }
-
   let total = 0;
   container.innerHTML = pdvComanda.map((item, idx) => {
     const subtotal = item.preco * (item.qty || 1);
@@ -1160,28 +1092,23 @@ function renderPDVComanda() {
         <span class="pdv-comanda-item-qty">${item.qty || 1}x</span>
         <span class="pdv-comanda-item-nome">${item.nome}</span>
         <span class="pdv-comanda-item-preco">${subtotal > 0 ? 'R$ ' + subtotal.toFixed(2).replace('.',',') : '—'}</span>
-        <button class="pdv-comanda-item-remove" onclick="removerDoPDV(${idx})" title="Remover">×</button>
+        <button class="pdv-comanda-item-remove" onclick="removerDoPDV(${idx})">×</button>
       </div>
     `;
   }).join('');
-
   totalEl.textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
 }
 
 async function salvarNovoPedido() {
   const tipo = document.getElementById('novo-tipo').value;
   const ident = document.getElementById('novo-ident').value.trim();
+  if (!ident) { toast('Informe a identificação', 'error'); return; }
+  if (pdvComanda.length === 0) { toast('Adicione itens', 'error'); return; }
 
-  if (!ident) { toast('Informe a identificação do pedido', 'error'); return; }
-  if (pdvComanda.length === 0) { toast('Adicione pelo menos um item ao pedido', 'error'); return; }
-
-  const identificacaoFinal = tipo === 'mesa' && !ident.toLowerCase().includes('mesa')
-    ? `Mesa ${ident}`
-    : tipo === 'delivery' && !ident.toLowerCase().includes('delivery')
-      ? `Delivery - ${ident}`
-      : tipo === 'balcao' && !ident.toLowerCase().includes('balcão') && !ident.toLowerCase().includes('balcao')
-        ? `Balcão - ${ident}`
-        : ident;
+  const identificacaoFinal = tipo === 'mesa' && !ident.toLowerCase().includes('mesa') ? `Mesa ${ident}`
+    : tipo === 'delivery' && !ident.toLowerCase().includes('delivery') ? `Delivery - ${ident}`
+    : tipo === 'balcao' && !ident.toLowerCase().includes('balcão') && !ident.toLowerCase().includes('balcao') ? `Balcão - ${ident}`
+    : ident;
 
   const itensTexto = pdvComanda.map(i => `${i.qty || 1}x ${i.nome}`).join('\n');
   const valorTotal = pdvComanda.reduce((acc, i) => acc + i.preco * (i.qty || 1), 0);
@@ -1189,58 +1116,37 @@ async function salvarNovoPedido() {
   try {
     let comanda = todasComandas.find(c => c.identificacao === identificacaoFinal && c.tipo === tipo && c.status === 'aberta');
     let id_comanda;
-
     if (!comanda) {
       id_comanda = await db.comandas.add({
         identificacao: identificacaoFinal,
-        tipo,
-        status: 'aberta',
+        tipo, status: 'aberta',
         taxa_entrega: tipo === 'delivery' ? parseFloat(config.taxa_delivery) || 0 : 0,
-        data_abertura: Date.now(),
-        data_fechamento: null
+        data_abertura: Date.now(), data_fechamento: null
       });
-    } else {
-      id_comanda = comanda.id_comanda;
-    }
+    } else id_comanda = comanda.id_comanda;
 
     await db.pedidos.add({
-      id_comanda,
-      identificacao: identificacaoFinal,
-      itens: itensTexto,
-      valor_total: valorTotal,
-      status: 'aguardando',
-      responsavel: null,
-      data_entrada: Date.now(),
-      data_inicio: null,
-      data_fim: null
+      id_comanda, identificacao: identificacaoFinal, itens: itensTexto,
+      valor_total: valorTotal, status: 'aguardando', responsavel: null,
+      data_entrada: Date.now(), data_inicio: null, data_fim: null
     });
-
     fecharModal('modal-novo');
     await carregarTudo();
-    toast('Pedido criado com sucesso', 'success');
-  } catch(e) {
-    console.error(e);
-    toast('Erro ao criar pedido', 'error');
-  }
+    toast('Pedido criado', 'success');
+  } catch(e) { toast('Erro ao criar pedido', 'error'); }
 }
 
 async function abrirSelecionarFuncionario() {
   const ativos = equipe.filter(f => f.ativo);
   const grid = document.getElementById('func-grid-select');
   selectedFuncName = null;
-
-  if (ativos.length === 0) {
-    toast('Nenhum funcionário ativo. Cadastre na Gestão de Equipa.', 'error');
-    return;
-  }
-
+  if (ativos.length === 0) { toast('Nenhum funcionário ativo.', 'error'); return; }
   grid.innerHTML = ativos.map(f => `
     <div class="func-card" onclick="selecionarFuncionario(this, '${escStr(f.nome)}')">
       <div class="func-avatar">${f.nome.split(' ').map(w=>w[0]).slice(0,2).join('')}</div>
       <div class="func-name">${f.nome}</div>
     </div>
   `).join('');
-
   abrirModal('modal-funcionario');
 }
 
@@ -1254,98 +1160,60 @@ async function confirmarAtribuicao() {
   if (!selectedFuncName) { toast('Selecione um funcionário', 'error'); return; }
   if (!pendingMoveId) return;
   try {
-    await db.pedidos.update(pendingMoveId, {
-      status: 'preparo',
-      responsavel: selectedFuncName,
-      data_inicio: Date.now()
-    });
+    await db.pedidos.update(pendingMoveId, { status: 'preparo', responsavel: selectedFuncName, data_inicio: Date.now() });
     fecharModal('modal-funcionario');
-    pendingMoveId = null; pendingMoveStatus = null; selectedFuncName = null;
+    pendingMoveId = null; selectedFuncName = null;
     await carregarTudo();
     toast('Pedido em preparo', 'success');
-  } catch(e) {
-    toast('Erro ao atribuir funcionário', 'error');
-  }
+  } catch(e) { toast('Erro ao atribuir', 'error'); }
 }
 
 function renderExpedicao() {
   const grid = document.getElementById('expedicao-grid');
   const pedidosProntos = todosPedidos.filter(p => p.status === 'pronto');
-
   if (pedidosProntos.length === 0) {
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;opacity:0.5;"><div class="empty-icon"></div><div class="empty-text">Nenhum pedido pronto no momento</div></div>`;
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon"></div><div class="empty-text">Nenhum pedido pronto</div></div>`;
     return;
   }
-
   grid.innerHTML = pedidosProntos.map(p => `
     <div class="expedicao-card">
       <div class="expedicao-header">
-        <div>
-          <div class="expedicao-id">#${String(p.id_pedido).padStart(4,'0')}</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">${p.identificacao}</div>
-        </div>
+        <div><div class="expedicao-id">#${String(p.id_pedido).padStart(4,'0')}</div><div style="font-size:13px;color:var(--text-muted);">${p.identificacao}</div></div>
         <div class="expedicao-tipo">${getBadgeLabel(p.identificacao)}</div>
       </div>
       <div class="expedicao-itens">${(p.itens||'').replace(/\n/g,'<br>')}</div>
-      <div class="expedicao-actions">
-        <button class="btn btn-primary" onclick="marcarRetirado(${p.id_pedido})">
-          <svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-          Cliente Retirou
-        </button>
-      </div>
+      <div class="expedicao-actions"><button class="btn btn-primary" onclick="marcarRetirado(${p.id_pedido})">Cliente Retirou</button></div>
     </div>
   `).join('');
 }
 
 function renderPagamentos() {
   const grid = document.getElementById('pagamentos-grid');
-
   const hoje = new Date(); hoje.setHours(0,0,0,0);
   const hojeTs = hoje.getTime();
-
   const pendentes = todasComandas.filter(c => c.status === 'aguardando_pagamento');
   const pagas = todasComandas.filter(c => c.status === 'paga' && (c.data_fechamento || 0) >= hojeTs);
-
   const todas = [...pendentes, ...pagas];
-
   if (todas.length === 0) {
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;opacity:0.5;"><div class="empty-icon"></div><div class="empty-text">Nenhuma comanda hoje</div></div>`;
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon"></div><div class="empty-text">Nenhuma comanda hoje</div></div>`;
     return;
   }
-
   grid.innerHTML = todas.map(cmd => {
     const pedidosCmd = todosPedidos.filter(p => p.id_comanda === cmd.id_comanda);
     const taxa = cmd.taxa_entrega || 0;
     const total = pedidosCmd.reduce((acc, p) => acc + (parseFloat(p.valor_total)||0), 0) + taxa;
     const itensTexto = pedidosCmd.map(p => p.itens).join(' | ');
     const pago = cmd.status === 'paga';
-
     const pagamento = todosPagamentos.find(pg => pg.id_comanda === cmd.id_comanda);
     const formaLabel = pagamento ? pagamento.forma_pagamento.toUpperCase() : '';
-
     const actionBtn = pago
-      ? `<div class="btn-pago-badge">
-          <svg style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-          PAGO · ${formaLabel}
-         </div>`
-      : `<button class="btn btn-primary" onclick="abrirPagamentoDetalhe(${cmd.id_comanda})" style="width:100%;height:44px;">
-          Finalizar Pagamento
-         </button>`;
-
+      ? `<div class="btn-pago-badge">PAGO · ${formaLabel}</div>`
+      : `<button class="btn btn-primary" onclick="abrirPagamentoDetalhe(${cmd.id_comanda})" style="width:100%;height:44px;">Finalizar Pagamento</button>`;
     return `
       <div class="pagamento-card ${pago ? 'pago' : ''}">
-        <div class="pagamento-header">
-          <div>
-            <div class="pagamento-id">#${String(cmd.id_comanda).padStart(4,'0')}</div>
-            <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">${cmd.identificacao}</div>
-          </div>
-          <div class="pagamento-status ${pago ? 'pago' : ''}">${pago ? 'PAGO' : cmd.tipo.toUpperCase()}</div>
-        </div>
+        <div class="pagamento-header"><div><div class="pagamento-id">#${String(cmd.id_comanda).padStart(4,'0')}</div><div style="font-size:13px;color:var(--text-muted);">${cmd.identificacao}</div></div><div class="pagamento-status ${pago ? 'pago' : ''}">${pago ? 'PAGO' : cmd.tipo.toUpperCase()}</div></div>
         <div class="pagamento-itens">${itensTexto.substring(0,120)}${itensTexto.length > 120 ? '...' : ''}</div>
-        <div class="pagamento-total">
-          <div class="pagamento-total-label">Total</div>
-          <div class="pagamento-total-valor">R$ ${total.toFixed(2).replace('.',',')}</div>
-        </div>
+        <div class="pagamento-total"><div class="pagamento-total-label">Total</div><div class="pagamento-total-valor">R$ ${total.toFixed(2).replace('.',',')}</div></div>
         ${actionBtn}
       </div>
     `;
@@ -1360,62 +1228,13 @@ function abrirPagamentoDetalhe(id_comanda) {
   const taxa = cmd.taxa_entrega || 0;
   const total = pedidosCmd.reduce((acc, p) => acc + (parseFloat(p.valor_total)||0), 0) + taxa;
   formaPagamentoSelecionada = null;
-
   let html = `
-    <div class="admin-section">
-      <div class="admin-section-title">Comanda #${String(id_comanda).padStart(4,'0')}</div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
-        <div>
-          <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;">Identificação</div>
-          <div style="font-size:17px;font-weight:600;margin-top:4px;">${cmd.identificacao}</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;">Tipo</div>
-          <div style="font-size:17px;font-weight:600;margin-top:4px;">${cmd.tipo.toUpperCase()}</div>
-        </div>
-      </div>
-    </div>
-    <div class="admin-section">
-      <div class="admin-section-title">Itens</div>
-      <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px;font-size:13px;line-height:1.8;">
-        ${pedidosCmd.map(p => `
-          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border-subtle);">
-            <span>${p.itens.split('\n')[0]}</span>
-            <span style="color:var(--accent);font-weight:600;">R$ ${parseFloat(p.valor_total).toFixed(2).replace('.',',')}</span>
-          </div>
-        `).join('')}
-        ${taxa > 0 ? `<div style="display:flex;justify-content:space-between;padding:7px 0;margin-top:8px;font-weight:600;"><span>Taxa Entrega</span><span style="color:var(--accent);">R$ ${taxa.toFixed(2).replace('.',',')}</span></div>` : ''}
-        <div style="display:flex;justify-content:space-between;padding:9px 0;margin-top:8px;border-top:1px solid var(--border);font-weight:700;font-size:15px;">
-          <span>TOTAL</span>
-          <span style="color:var(--accent);">R$ ${total.toFixed(2).replace('.',',')}</span>
-        </div>
-      </div>
-    </div>
-    <div class="admin-section">
-      <div class="admin-section-title">Forma de Pagamento</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <button class="forma-btn" onclick="selecionarFormaPagamento(this,'dinheiro')">Dinheiro</button>
-        <button class="forma-btn" onclick="selecionarFormaPagamento(this,'pix')">PIX</button>
-        <button class="forma-btn" onclick="selecionarFormaPagamento(this,'debito')">Débito</button>
-        <button class="forma-btn" onclick="selecionarFormaPagamento(this,'credito')">Crédito</button>
-      </div>
-    </div>
-    <div class="admin-section" id="dinheiro-section" style="display:none;">
-      <div class="admin-section-title">Valor Recebido</div>
-      <div style="display:flex;gap:8px;">
-        <input class="form-input" id="valor-recebido" type="number" step="0.01" min="0" placeholder="0,00" style="flex:1;" oninput="calcularTroco(${total})">
-        <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px;min-width:130px;text-align:right;">
-          <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;">Troco</div>
-          <div style="font-size:17px;font-weight:700;color:var(--accent);margin-top:4px;" id="troco-display">R$ 0,00</div>
-        </div>
-      </div>
-    </div>
-    <div class="admin-section" style="display:flex;gap:8px;">
-      <button class="btn btn-ghost" onclick="fecharModal('modal-pagamento-detalhe')" style="flex:1;">Cancelar</button>
-      <button class="btn btn-primary" id="btn-confirmar-pagamento" onclick="confirmarPagamento(${id_comanda},${total})" style="flex:1;" disabled>Confirmar Pagamento</button>
-    </div>
+    <div class="admin-section"><div class="admin-section-title">Comanda #${String(id_comanda).padStart(4,'0')}</div><div style="display:flex;justify-content:space-between;margin-bottom:16px;"><div><div style="font-size:12px;color:var(--text-muted);">Identificação</div><div style="font-size:17px;font-weight:600;">${cmd.identificacao}</div></div><div><div style="font-size:12px;color:var(--text-muted);">Tipo</div><div style="font-size:17px;font-weight:600;">${cmd.tipo.toUpperCase()}</div></div></div></div>
+    <div class="admin-section"><div class="admin-section-title">Itens</div><div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px;font-size:13px;line-height:1.8;">${pedidosCmd.map(p => `<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border-subtle);"><span>${p.itens.split('\n')[0]}</span><span style="color:var(--accent);font-weight:600;">R$ ${parseFloat(p.valor_total).toFixed(2).replace('.',',')}</span></div>`).join('')}${taxa > 0 ? `<div style="display:flex;justify-content:space-between;padding:7px 0;margin-top:8px;font-weight:600;"><span>Taxa Entrega</span><span style="color:var(--accent);">R$ ${taxa.toFixed(2).replace('.',',')}</span></div>` : ''}<div style="display:flex;justify-content:space-between;padding:9px 0;margin-top:8px;border-top:1px solid var(--border);font-weight:700;font-size:15px;"><span>TOTAL</span><span style="color:var(--accent);">R$ ${total.toFixed(2).replace('.',',')}</span></div></div></div>
+    <div class="admin-section"><div class="admin-section-title">Forma de Pagamento</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button class="forma-btn" onclick="selecionarFormaPagamento(this,'dinheiro')">Dinheiro</button><button class="forma-btn" onclick="selecionarFormaPagamento(this,'pix')">PIX</button><button class="forma-btn" onclick="selecionarFormaPagamento(this,'debito')">Débito</button><button class="forma-btn" onclick="selecionarFormaPagamento(this,'credito')">Crédito</button></div></div>
+    <div class="admin-section" id="dinheiro-section" style="display:none;"><div class="admin-section-title">Valor Recebido</div><div style="display:flex;gap:8px;"><input class="form-input" id="valor-recebido" type="number" step="0.01" min="0" placeholder="0,00" style="flex:1;" oninput="calcularTroco(${total})"><div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px;min-width:130px;text-align:right;"><div style="font-size:11px;color:var(--text-muted);">Troco</div><div style="font-size:17px;font-weight:700;color:var(--accent);margin-top:4px;" id="troco-display">R$ 0,00</div></div></div></div>
+    <div class="admin-section" style="display:flex;gap:8px;"><button class="btn btn-ghost" onclick="fecharModal('modal-pagamento-detalhe')" style="flex:1;">Cancelar</button><button class="btn btn-primary" id="btn-confirmar-pagamento" onclick="confirmarPagamento(${id_comanda},${total})" style="flex:1;" disabled>Confirmar Pagamento</button></div>
   `;
-
   document.getElementById('pagamento-detalhe-content').innerHTML = html;
   abrirModal('modal-pagamento-detalhe');
 }
@@ -1435,151 +1254,85 @@ function calcularTroco(total) {
 }
 
 async function confirmarPagamento(id_comanda, total) {
-  if (!formaPagamentoSelecionada) { toast('Selecione uma forma de pagamento', 'error'); return; }
-
+  if (!formaPagamentoSelecionada) { toast('Selecione uma forma', 'error'); return; }
   try {
-    let valorRecebido = total;
-    let troco = 0;
-
+    let valorRecebido = total, troco = 0;
     if (formaPagamentoSelecionada === 'dinheiro') {
       valorRecebido = parseFloat(document.getElementById('valor-recebido').value) || 0;
       troco = valorRecebido - total;
-      if (valorRecebido < total) { toast('Valor recebido é menor que o total', 'error'); return; }
+      if (valorRecebido < total) { toast('Valor recebido menor que o total', 'error'); return; }
     }
-
-    await db.pagamentos.add({
-      id_comanda,
-      forma_pagamento: formaPagamentoSelecionada,
-      valor_total: total,
-      valor_recebido: valorRecebido,
-      troco,
-      data_pagamento: Date.now()
-    });
-
+    await db.pagamentos.add({ id_comanda, forma_pagamento: formaPagamentoSelecionada, valor_total: total, valor_recebido: valorRecebido, troco, data_pagamento: Date.now() });
     await db.comandas.update(id_comanda, { status: 'paga', data_fechamento: Date.now() });
-
     fecharModal('modal-pagamento-detalhe');
     await carregarTudo();
-    toast(`Pagamento confirmado! ${formaPagamentoSelecionada === 'dinheiro' ? `Troco: R$ ${troco.toFixed(2).replace('.',',')}` : ''}`, 'success');
-  } catch(e) {
-    console.error(e);
-    toast('Erro ao confirmar pagamento', 'error');
-  }
+    toast(`Pagamento confirmado!`, 'success');
+  } catch(e) { toast('Erro ao confirmar pagamento', 'error'); }
 }
 
-// ─── EQUIPA ───────────────────────────────────────────────────────────────────
-async function abrirModalEquipa() {
-  await renderEquipeListModal();
-  abrirModal('modal-equipa');
-}
-
+// Equipe
+async function abrirModalEquipa() { await renderEquipeListModal(); abrirModal('modal-equipa'); }
 async function renderEquipeListModal() {
   const lista = document.getElementById('equipe-list-modal');
   const func = await db.equipe.toArray();
-  if (func.length === 0) {
-    lista.innerHTML = '<div class="empty-text" style="padding:20px;text-align:center;">Nenhum funcionário cadastrado</div>';
-    return;
-  }
+  if (func.length === 0) { lista.innerHTML = '<div class="empty-text">Nenhum funcionário</div>'; return; }
   lista.innerHTML = func.map(f => equipeItemHTML(f)).join('');
 }
-
 async function renderEquipeList() {
   const lista = document.getElementById('equipe-list');
   const func = await db.equipe.toArray();
-  if (func.length === 0) {
-    lista.innerHTML = '<div class="empty-text" style="padding:20px;text-align:center;">Nenhum funcionário cadastrado</div>';
-    return;
-  }
+  if (func.length === 0) { lista.innerHTML = '<div class="empty-text">Nenhum funcionário</div>'; return; }
   lista.innerHTML = func.map(f => equipeItemHTML(f)).join('');
 }
-
 function equipeItemHTML(f) {
   return `
     <div class="equipe-item ${f.ativo ? '' : 'inativo'}">
       <div class="equipe-initials">${f.nome.split(' ').map(w=>w[0]).slice(0,2).join('')}</div>
-      <div class="equipe-info">
-        <div class="equipe-nome">${f.nome}</div>
-        <div class="equipe-status">
-          <span class="status-dot ${f.ativo ? '' : 'off'}"></span>
-          ${f.ativo ? 'Ativo no turno' : 'Fora do turno'}
-        </div>
-      </div>
-      <div class="equipe-actions">
-        <label class="toggle">
-          <input type="checkbox" ${f.ativo ? 'checked' : ''} onchange="toggleFuncionario(${f.id_func}, this.checked)">
-          <div class="toggle-track"></div>
-        </label>
-        <button class="btn btn-danger btn-sm btn-icon" onclick="removerFuncionario(${f.id_func}, '${escStr(f.nome)}')">
-          <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-        </button>
-      </div>
+      <div class="equipe-info"><div class="equipe-nome">${f.nome}</div><div class="equipe-status"><span class="status-dot ${f.ativo ? '' : 'off'}"></span>${f.ativo ? 'Ativo' : 'Inativo'}</div></div>
+      <div class="equipe-actions"><label class="toggle"><input type="checkbox" ${f.ativo ? 'checked' : ''} onchange="toggleFuncionario(${f.id_func}, this.checked)"><div class="toggle-track"></div></label><button class="btn btn-danger btn-sm btn-icon" onclick="removerFuncionario(${f.id_func}, '${escStr(f.nome)}')">🗑️</button></div>
     </div>
   `;
 }
-
 async function adicionarFuncionarioModal() {
   const nome = document.getElementById('novo-func-nome-modal').value.trim();
-  if (!nome) { toast('Informe o nome do funcionário', 'error'); return; }
-  try {
-    await db.equipe.add({ nome, ativo: 1 });
-    document.getElementById('novo-func-nome-modal').value = '';
-    await renderEquipeListModal();
-    await carregarTudo();
-    toast(`${nome} adicionado`, 'success');
-  } catch(e) { toast('Erro ao adicionar funcionário', 'error'); }
+  if (!nome) { toast('Informe o nome', 'error'); return; }
+  await db.equipe.add({ nome, ativo: 1 });
+  document.getElementById('novo-func-nome-modal').value = '';
+  await renderEquipeListModal(); await carregarTudo();
+  toast(`${nome} adicionado`, 'success');
 }
-
 async function adicionarFuncionario() {
   const nome = document.getElementById('novo-func-nome').value.trim();
-  if (!nome) { toast('Informe o nome do funcionário', 'error'); return; }
-  try {
-    await db.equipe.add({ nome, ativo: 1 });
-    document.getElementById('novo-func-nome').value = '';
-    await renderEquipeList();
-    await carregarTudo();
-    toast(`${nome} adicionado`, 'success');
-  } catch(e) { toast('Erro ao adicionar funcionário', 'error'); }
+  if (!nome) { toast('Informe o nome', 'error'); return; }
+  await db.equipe.add({ nome, ativo: 1 });
+  document.getElementById('novo-func-nome').value = '';
+  await renderEquipeList(); await carregarTudo();
+  toast(`${nome} adicionado`, 'success');
 }
-
 async function toggleFuncionario(id, ativo) {
-  try {
-    await db.equipe.update(id, { ativo: ativo ? 1 : 0 });
-    await renderEquipeList();
-    await renderEquipeListModal();
-    await carregarTudo();
-  } catch(e) { toast('Erro ao atualizar funcionário', 'error'); }
+  await db.equipe.update(id, { ativo: ativo ? 1 : 0 });
+  await renderEquipeList(); await renderEquipeListModal(); await carregarTudo();
 }
-
 async function removerFuncionario(id, nome) {
-  const emPreparo = todosPedidos.some(p => p.responsavel === nome && p.status === 'preparo');
-  if (emPreparo) { toast(`Não é possível remover ${nome}: há pedidos em preparo atribuídos`, 'error'); return; }
   if (!confirm(`Remover ${nome}?`)) return;
-  try {
-    await db.equipe.delete(id);
-    await renderEquipeList();
-    await renderEquipeListModal();
-    await carregarTudo();
-    toast(`${nome} removido`, 'info');
-  } catch(e) { toast('Erro ao remover funcionário', 'error'); }
+  await db.equipe.delete(id);
+  await renderEquipeList(); await renderEquipeListModal(); await carregarTudo();
+  toast(`${nome} removido`, 'info');
 }
 
-// ─── KPIs ────────────────────────────────────────────────────────────────────
 function renderKPIs() {
   const hoje = new Date(); hoje.setHours(0,0,0,0);
   const hojeTs = hoje.getTime();
-
-  const finalizadosHoje = todosPedidos.filter(p => p.status === 'pronto' && p.data_entrada >= hojeTs);
   const fat = todosPedidos.filter(p => p.data_entrada >= hojeTs).reduce((acc, p) => acc + (parseFloat(p.valor_total)||0), 0);
   const ativos = todosPedidos.filter(p => ['aguardando','preparo','embalagem'].includes(p.status)).length;
+  const finalizadosHoje = todosPedidos.filter(p => p.status === 'pronto' && p.data_entrada >= hojeTs);
   const tempos = finalizadosHoje.filter(p => p.data_inicio && p.data_fim).map(p => p.data_fim - p.data_inicio);
   const tempoMedio = tempos.length > 0 ? tempos.reduce((a,b)=>a+b,0) / tempos.length : null;
-
   document.getElementById('kpi-fat').textContent = `R$ ${fat.toFixed(2).replace('.',',')}`;
   document.getElementById('kpi-ativos').textContent = ativos;
   document.getElementById('kpi-tempo').textContent = tempoMedio ? formatarTempo(tempoMedio) : '--:--';
 }
 
-// ─── FILTROS ─────────────────────────────────────────────────────────────────
 function setFiltro(el, filtro) {
   document.querySelectorAll('.filter-chip[data-filter]').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
@@ -1590,46 +1343,29 @@ function setFiltro(el, filtro) {
 function renderFiltrosFuncionarios() {
   const container = document.getElementById('filtros-funcionarios');
   const ativos = equipe.filter(f => f.ativo);
-  container.innerHTML = ativos.map(f => `
-    <button class="filter-chip" data-func="${f.nome}" onclick="toggleFiltroFunc(this,'${escStr(f.nome)}')">
-      <span style="width:5px;height:5px;border-radius:50%;background:#22c55e;display:inline-block;"></span>
-      ${f.nome.split(' ')[0]}
-    </button>
-  `).join('');
+  container.innerHTML = ativos.map(f => `<button class="filter-chip" data-func="${f.nome}" onclick="toggleFiltroFunc(this,'${escStr(f.nome)}')"><span style="width:5px;height:5px;border-radius:50%;background:#22c55e;display:inline-block;"></span> ${f.nome.split(' ')[0]}</button>`).join('');
 }
-
 function toggleFiltroFunc(el, nome) {
-  if (filtroFuncionario === nome) {
-    filtroFuncionario = null;
-    el.classList.remove('active');
-  } else {
-    document.querySelectorAll('[data-func]').forEach(c => c.classList.remove('active'));
-    filtroFuncionario = nome;
-    el.classList.add('active');
-  }
+  if (filtroFuncionario === nome) { filtroFuncionario = null; el.classList.remove('active'); }
+  else { document.querySelectorAll('[data-func]').forEach(c => c.classList.remove('active')); filtroFuncionario = nome; el.classList.add('active'); }
   renderBoard();
 }
 
-// ─── TIMERS ───────────────────────────────────────────────────────────────────
 function iniciarTimers() {
   if (timerInterval) clearInterval(timerInterval);
   timerInterval = setInterval(() => {
-    todosPedidos.forEach(p => {
-      if ((p.status === 'preparo' || p.status === 'embalagem') && p.data_inicio) atualizarTimerCard(p);
-    });
+    todosPedidos.forEach(p => { if ((p.status === 'preparo' || p.status === 'embalagem') && p.data_inicio) atualizarTimerCard(p); });
   }, 1000);
 }
-
 function atualizarTimerCard(p) {
   const el = document.getElementById(`timer-${p.id_pedido}`);
   if (!el) return;
   const elapsed = Date.now() - p.data_inicio;
   el.textContent = formatarTempo(elapsed);
   el.className = 'card-timer';
-  if (elapsed > 20 * 60 * 1000) el.classList.add('danger');
-  else if (elapsed > 12 * 60 * 1000) el.classList.add('warn');
+  if (elapsed > 20*60*1000) el.classList.add('danger');
+  else if (elapsed > 12*60*1000) el.classList.add('warn');
 }
-
 function formatarTempo(ms) {
   const s = Math.floor(ms/1000);
   const m = Math.floor(s/60);
@@ -1638,57 +1374,31 @@ function formatarTempo(ms) {
   return `${String(m).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
 }
 
-// ─── SEARCH ───────────────────────────────────────────────────────────────────
-document.getElementById('search-input').addEventListener('input', e => {
-  searchQuery = e.target.value;
-  renderBoard();
-});
+document.getElementById('search-input').addEventListener('input', e => { searchQuery = e.target.value; renderBoard(); });
 
-// ─── MODALS ───────────────────────────────────────────────────────────────────
 function abrirModal(id) { document.getElementById(id).classList.add('open'); }
 function fecharModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); }); });
 
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) overlay.classList.remove('open');
-  });
-});
-
-// ─── TOAST ───────────────────────────────────────────────────────────────────
 function toast(msg, type = 'info') {
   const container = document.getElementById('toast-container');
   const el = document.createElement('div');
   el.className = `toast ${type}`;
-  el.innerHTML = `
-    <svg class="icon" viewBox="0 0 24 24" style="flex-shrink:0">
-      ${type === 'success' ? '<polyline points="20 6 9 17 4 12"/>' :
-        type === 'error' ? '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' :
-        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
-    </svg>
-    <span>${msg}</span>
-  `;
+  el.innerHTML = `<svg class="icon" viewBox="0 0 24 24">${type==='success'?'<polyline points="20 6 9 17 4 12"/>':type==='error'?'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>':'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}</svg><span>${msg}</span>`;
   container.appendChild(el);
-  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(() => el.remove(), 300); }, 3200);
+  setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3200);
 }
-
-// ─── RELÓGIO ─────────────────────────────────────────────────────────────────
 function iniciarRelógio() {
   const el = document.getElementById('status-clock');
-  const atualizar = () => {
-    const now = new Date();
-    el.textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  };
-  atualizar();
-  setInterval(atualizar, 1000);
+  const atualizar = () => el.textContent = new Date().toLocaleTimeString('pt-BR');
+  atualizar(); setInterval(atualizar, 1000);
 }
 
-// ─── ABAS ─────────────────────────────────────────────────────────────────────
 function mudarAba(aba) {
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(`tab-${aba}`).classList.add('active');
   document.querySelector(`[data-tab="${aba}"]`).classList.add('active');
-
   const isCozinha = aba === 'cozinha';
   document.getElementById('search-wrap-cozinha').style.display = isCozinha ? 'flex' : 'none';
   document.getElementById('btn-equipa').style.display = isCozinha ? 'inline-flex' : 'none';
@@ -1697,223 +1407,36 @@ function mudarAba(aba) {
   document.getElementById('kpi-strip').style.display = isCozinha ? 'flex' : 'none';
 }
 
-// ─── PIN ─────────────────────────────────────────────────────────────────────
 function verificarPIN() {
   if (adminAutenticado) { mudarAba('admin'); return; }
-  pinInput = '';
-  renderizarPIN();
-  abrirModal('pin-modal-overlay');
+  pinInput = ''; renderizarPIN(); abrirModal('pin-modal-overlay');
 }
-
 function renderizarPIN() {
   const display = document.getElementById('pin-display');
   display.innerHTML = '';
-  for (let i = 0; i < 4; i++) {
-    const digit = document.createElement('div');
-    digit.className = `pin-digit ${i < pinInput.length ? 'filled' : ''}`;
-    digit.textContent = i < pinInput.length ? '●' : '';
-    display.appendChild(digit);
-  }
-
-  const keypad = document.getElementById('pin-keypad');
-  keypad.innerHTML = '';
-  for (let i = 1; i <= 9; i++) {
-    const btn = document.createElement('button');
-    btn.className = 'pin-key'; btn.textContent = i;
-    btn.onclick = () => adicionarDigitoPIN(i);
-    keypad.appendChild(btn);
-  }
-  const btn0 = document.createElement('button');
-  btn0.className = 'pin-key'; btn0.textContent = '0';
-  btn0.onclick = () => adicionarDigitoPIN(0);
-  keypad.appendChild(btn0);
-
-  const btnDel = document.createElement('button');
-  btnDel.className = 'pin-key delete';
-  btnDel.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>';
-  btnDel.onclick = () => removerDigitoPIN();
-  keypad.appendChild(btnDel);
+  for (let i=0;i<4;i++) { const d=document.createElement('div'); d.className=`pin-digit ${i<pinInput.length?'filled':''}`; d.textContent=i<pinInput.length?'●':''; display.appendChild(d); }
+  const keypad=document.getElementById('pin-keypad'); keypad.innerHTML='';
+  for(let i=1;i<=9;i++){const b=document.createElement('button');b.className='pin-key';b.textContent=i;b.onclick=()=>adicionarDigitoPIN(i);keypad.appendChild(b);}
+  const b0=document.createElement('button');b0.className='pin-key';b0.textContent='0';b0.onclick=()=>adicionarDigitoPIN(0);keypad.appendChild(b0);
+  const bDel=document.createElement('button');bDel.className='pin-key delete';bDel.innerHTML='<svg class="icon" viewBox="0 0 24 24"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>';bDel.onclick=()=>removerDigitoPIN();keypad.appendChild(bDel);
 }
+function adicionarDigitoPIN(digit){if(pinInput.length<4){pinInput+=digit;renderizarPIN();if(pinInput.length===4)setTimeout(()=>verificarPINCorreto(),300);}}
+function removerDigitoPIN(){pinInput=pinInput.slice(0,-1);renderizarPIN();}
+function verificarPINCorreto(){if(pinInput===String(config.pin)){adminAutenticado=true;fecharModal('pin-modal-overlay');mudarAba('admin');toast('Acesso concedido','success');carregarConfigAdmin();}else{toast('PIN incorreto','error');pinInput='';renderizarPIN();}}
+function carregarConfigAdmin(){document.getElementById('config-nome').value=config.nome_estabelecimento||'';document.getElementById('config-taxa').value=config.taxa_delivery||0;}
+async function salvarConfiguracoes(){const nome=document.getElementById('config-nome').value.trim();const taxa=parseFloat(document.getElementById('config-taxa').value)||0;if(!nome){toast('Informe o nome','error');return;}await db.config.bulkPut([{chave:'nome_estabelecimento',valor:nome},{chave:'taxa_delivery',valor:taxa}]);config.nome_estabelecimento=nome;config.taxa_delivery=taxa;toast('Configurações salvas','success');}
+async function salvarNovoPin(){const novoPIN=document.getElementById('novo-pin').value.trim();if(novoPIN.length!==4||!/^\d+$/.test(novoPIN)){toast('PIN deve ter 4 dígitos','error');return;}await db.config.put({chave:'pin',valor:novoPIN});config.pin=novoPIN;document.getElementById('novo-pin').value='';toast('PIN alterado','success');}
+async function renderCardapioList(){const lista=document.getElementById('cardapio-list');const items=await db.cardapio.toArray();if(items.length===0){lista.innerHTML='<div class="empty-text">Nenhum item no cardápio</div>';return;}lista.innerHTML=items.map(item=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:11px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;"><div><div style="font-weight:600;">${item.nome}</div><div style="font-size:13px;color:var(--text-muted);">R$ ${parseFloat(item.preco).toFixed(2).replace('.',',')}</div></div><button class="btn btn-danger btn-sm btn-icon" onclick="removerItemCardapio(${item.id_item})">🗑️</button></div>`).join('');}
+function mudarAdminTab(tab){document.querySelectorAll('.admin-tab-content').forEach(c=>c.classList.remove('active'));document.querySelectorAll('.admin-tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById(`admin-${tab}`).classList.add('active');document.querySelector(`[onclick="mudarAdminTab('${tab}')"]`).classList.add('active');if(tab==='equipe')renderEquipeList();else if(tab==='cardapio')renderCardapioList();}
+function filtrarHistorico(){const dataIni=new Date(document.getElementById('hist-data-ini').value).getTime();const dataFim=new Date(document.getElementById('hist-data-fim').value).getTime()+86400000;const pedidosFiltrados=todosPedidos.filter(p=>p.data_entrada>=dataIni&&p.data_entrada<=dataFim);const pagamentosFiltrados=todosPagamentos.filter(p=>p.data_pagamento>=dataIni&&p.data_pagamento<=dataFim);document.getElementById('historico-pedidos-body').innerHTML=pedidosFiltrados.map(p=>`<tr><td>#${String(p.id_pedido).padStart(4,'0')}</td><td>${p.identificacao}</td><td>${(p.itens||'').substring(0,50)}...</td><td>R$ ${parseFloat(p.valor_total).toFixed(2).replace('.',',')}</td><td>${new Date(p.data_entrada).toLocaleDateString('pt-BR')}</td></tr>`).join('');document.getElementById('historico-pagamentos-body').innerHTML=pagamentosFiltrados.map(pag=>{const cmd=todasComandas.find(c=>c.id_comanda===pag.id_comanda);return`<tr><td>#${String(pag.id_comanda).padStart(4,'0')}</td><td>${cmd?cmd.identificacao:'N/A'}</td><td>${pag.forma_pagamento.toUpperCase()}</td><td>R$ ${parseFloat(pag.valor_total).toFixed(2).replace('.',',')}</td><td>${new Date(pag.data_pagamento).toLocaleDateString('pt-BR')}</td></tr>`;}).join('');toast('Histórico filtrado','success');}
+function calcularFaturamento(){const dataIni=new Date(document.getElementById('fat-data-ini').value).getTime();const dataFim=new Date(document.getElementById('fat-data-fim').value).getTime()+86400000;const pagamentosFiltrados=todosPagamentos.filter(p=>p.data_pagamento>=dataIni&&p.data_pagamento<=dataFim);const total=pagamentosFiltrados.reduce((acc,p)=>acc+p.valor_total,0);const porForma={};pagamentosFiltrados.forEach(p=>{porForma[p.forma_pagamento]=(porForma[p.forma_pagamento]||0)+p.valor_total;});document.getElementById('faturamento-resultado').innerHTML=`<div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;"><div style="display:flex;justify-content:space-between;margin-bottom:16px;padding-bottom:13px;border-bottom:1px solid var(--border);"><div><div style="font-size:12px;color:var(--text-muted);">Total Faturado</div><div style="font-size:26px;font-weight:700;color:var(--accent);">R$ ${total.toFixed(2).replace('.',',')}</div></div><div><div style="font-size:12px;color:var(--text-muted);">Transações</div><div style="font-size:26px;font-weight:700;">${pagamentosFiltrados.length}</div></div></div><div><div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Breakdown por Forma</div>${Object.entries(porForma).map(([forma,valor])=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border-subtle);"><span>${forma}</span><span style="color:var(--accent);">R$ ${valor.toFixed(2).replace('.',',')}</span></div>`).join('')}</div></div>`;toast('Faturamento calculado','success');}
 
-function adicionarDigitoPIN(digit) {
-  if (pinInput.length < 4) {
-    pinInput += digit;
-    renderizarPIN();
-    if (pinInput.length === 4) setTimeout(() => verificarPINCorreto(), 300);
-  }
-}
-function removerDigitoPIN() {
-  pinInput = pinInput.slice(0, -1);
-  renderizarPIN();
-}
-function verificarPINCorreto() {
-  if (pinInput === String(config.pin)) {
-    adminAutenticado = true;
-    fecharModal('pin-modal-overlay');
-    mudarAba('admin');
-    toast('Acesso concedido', 'success');
-    carregarConfigAdmin();
-  } else {
-    toast('PIN incorreto', 'error');
-    pinInput = '';
-    renderizarPIN();
-  }
-}
-
-function carregarConfigAdmin() {
-  document.getElementById('config-nome').value = config.nome_estabelecimento || '';
-  document.getElementById('config-taxa').value = config.taxa_delivery || 0;
-}
-
-// ─── ADMIN: CONFIG ────────────────────────────────────────────────────────────
-async function salvarConfiguracoes() {
-  const nome = document.getElementById('config-nome').value.trim();
-  const taxa = parseFloat(document.getElementById('config-taxa').value) || 0;
-  if (!nome) { toast('Informe o nome do estabelecimento', 'error'); return; }
-  try {
-    await db.config.bulkPut([
-      { chave: 'nome_estabelecimento', valor: nome },
-      { chave: 'taxa_delivery', valor: taxa }
-    ]);
-    config.nome_estabelecimento = nome;
-    config.taxa_delivery = taxa;
-    toast('Configurações salvas', 'success');
-  } catch(e) { toast('Erro ao salvar configurações', 'error'); }
-}
-
-async function salvarNovoPin() {
-  const novoPIN = document.getElementById('novo-pin').value.trim();
-  if (novoPIN.length !== 4 || !/^\d+$/.test(novoPIN)) { toast('PIN deve ter exatamente 4 dígitos', 'error'); return; }
-  try {
-    await db.config.put({ chave: 'pin', valor: novoPIN });
-    config.pin = novoPIN;
-    document.getElementById('novo-pin').value = '';
-    toast('PIN alterado com sucesso', 'success');
-  } catch(e) { toast('Erro ao alterar PIN', 'error'); }
-}
-
-// ─── ADMIN: CARDÁPIO (substituídas pelas versões Firebase) ────────────────────
-// As funções originais serão sobrescritas pelo módulo Firebase, mas precisamos declarar placeholders
-// para evitar erros antes do carregamento do módulo. O módulo Firebase substituirá estas funções.
-
-async function adicionarItemCardapio() {
-  // Será substituída pela versão Firebase
-  console.warn("Função adicionarItemCardapio será substituída pela integração Firebase.");
-}
-
-async function removerItemCardapio(id_item) {
-  // Será substituída pela versão Firebase
-  console.warn("Função removerItemCardapio será substituída pela integração Firebase.");
-}
-
-async function renderCardapioList() {
-  const lista = document.getElementById('cardapio-list');
-  const items = await db.cardapio.toArray();
-  if (items.length === 0) {
-    lista.innerHTML = '<div class="empty-text" style="padding:20px;text-align:center;">Nenhum item no cardápio</div>';
-    return;
-  }
-  lista.innerHTML = items.map(item => `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:11px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;">
-      <div>
-        <div style="font-weight:600;color:var(--text-primary);font-size:15px;">${item.nome}</div>
-        <div style="font-size:13px;color:var(--text-muted);">R$ ${parseFloat(item.preco).toFixed(2).replace('.',',')}</div>
-      </div>
-      <button class="btn btn-danger btn-sm btn-icon" onclick="removerItemCardapio(${item.id_item})">
-        <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-      </button>
-    </div>
-  `).join('');
-}
-
-// ─── ADMIN: TABS ──────────────────────────────────────────────────────────────
-function mudarAdminTab(tab) {
-  document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
-  document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(`admin-${tab}`).classList.add('active');
-  document.querySelector(`[onclick="mudarAdminTab('${tab}')"]`).classList.add('active');
-  if (tab === 'equipe') renderEquipeList();
-  else if (tab === 'cardapio') renderCardapioList();
-}
-
-// ─── ADMIN: HISTÓRICO ─────────────────────────────────────────────────────────
-function filtrarHistorico() {
-  const dataIni = new Date(document.getElementById('hist-data-ini').value).getTime();
-  const dataFim = new Date(document.getElementById('hist-data-fim').value).getTime() + 86400000;
-
-  const pedidosFiltrados = todosPedidos.filter(p => p.data_entrada >= dataIni && p.data_entrada <= dataFim);
-  const pagamentosFiltrados = todosPagamentos.filter(p => p.data_pagamento >= dataIni && p.data_pagamento <= dataFim);
-
-  document.getElementById('historico-pedidos-body').innerHTML = pedidosFiltrados.map(p => `
-    <tr>
-      <td>#${String(p.id_pedido).padStart(4,'0')}</td>
-      <td>${p.identificacao}</td>
-      <td>${(p.itens||'').substring(0,50)}...</td>
-      <td>R$ ${parseFloat(p.valor_total).toFixed(2).replace('.',',')}</td>
-      <td>${new Date(p.data_entrada).toLocaleDateString('pt-BR')}</td>
-    </tr>
-  `).join('');
-
-  document.getElementById('historico-pagamentos-body').innerHTML = pagamentosFiltrados.map(pag => {
-    const cmd = todasComandas.find(c => c.id_comanda === pag.id_comanda);
-    return `
-      <tr>
-        <td>#${String(pag.id_comanda).padStart(4,'0')}</td>
-        <td>${cmd ? cmd.identificacao : 'N/A'}</td>
-        <td>${pag.forma_pagamento.toUpperCase()}</td>
-        <td>R$ ${parseFloat(pag.valor_total).toFixed(2).replace('.',',')}</td>
-        <td>${new Date(pag.data_pagamento).toLocaleDateString('pt-BR')}</td>
-      </tr>
-    `;
-  }).join('');
-
-  toast('Histórico filtrado', 'success');
-}
-
-// ─── ADMIN: FATURAMENTO ───────────────────────────────────────────────────────
-function calcularFaturamento() {
-  const dataIni = new Date(document.getElementById('fat-data-ini').value).getTime();
-  const dataFim = new Date(document.getElementById('fat-data-fim').value).getTime() + 86400000;
-
-  const pagamentosFiltrados = todosPagamentos.filter(p => p.data_pagamento >= dataIni && p.data_pagamento <= dataFim);
-  const total = pagamentosFiltrados.reduce((acc, p) => acc + p.valor_total, 0);
-  const porForma = {};
-  pagamentosFiltrados.forEach(p => { porForma[p.forma_pagamento] = (porForma[p.forma_pagamento] || 0) + p.valor_total; });
-
-  document.getElementById('faturamento-resultado').innerHTML = `
-    <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:13px;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;">Total Faturado</div>
-          <div style="font-size:26px;font-weight:700;color:var(--accent);margin-top:4px;">R$ ${total.toFixed(2).replace('.',',')}</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;">Transações</div>
-          <div style="font-size:26px;font-weight:700;color:var(--text-primary);margin-top:4px;">${pagamentosFiltrados.length}</div>
-        </div>
-      </div>
-      <div style="margin-top:16px;">
-        <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Breakdown por Forma</div>
-        ${Object.entries(porForma).map(([forma, valor]) => `
-          <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border-subtle);">
-            <span style="text-transform:uppercase;font-weight:600;font-size:14px;">${forma}</span>
-            <span style="color:var(--accent);font-weight:600;font-size:14px;">R$ ${valor.toFixed(2).replace('.',',')}</span>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `;
-  toast('Faturamento calculado', 'success');
-}
-
-// ================= INTEGRAÇÃO FIREBASE (MÓDULO) =================
-// Este script será executado após o carregamento da página e irá sobrescrever as funções de cardápio
-// e iniciar a escuta de novos pedidos.
+window.addEventListener('DOMContentLoaded', init);
 </script>
 
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
-    import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, where, doc, deleteDoc, updateDoc, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+    import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, where, doc, deleteDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
 
     const firebaseConfig = {
         apiKey: "AIzaSyDXjlOgoMCAeihPKrNQ3OiWhEtdu_ptEUQ",
@@ -1923,240 +1446,130 @@ function calcularFaturamento() {
         messagingSenderId: "808172276807",
         appId: "1:808172276807:web:427575f53fb15d0097b562"
     };
-
     const app = initializeApp(firebaseConfig);
     const dbFirestore = getFirestore(app);
 
-    // IDs dos pedidos já importados (para evitar duplicação)
     let importedPedidosIds = new Set();
 
-    // ------------------------------------------------------------
-    // 1. Sincronização do Cardápio (Firestore <-> IndexedDB)
-    // ------------------------------------------------------------
+    // Sincronização do Cardápio
     async function carregarCardapioFirebase() {
         try {
             const produtosRef = collection(dbFirestore, "produtos");
             const q = query(produtosRef, where("disponivel", "==", true));
             const snapshot = await getDocs(q);
-            const produtosFirebase = snapshot.docs.map(doc => ({
-                firebaseId: doc.id,
-                nome: doc.data().nome,
-                preco: doc.data().preco
-            }));
-
+            const produtosFirebase = snapshot.docs.map(doc => ({ firebaseId: doc.id, nome: doc.data().nome, preco: doc.data().preco }));
             await db.cardapio.clear();
-            for (const prod of produtosFirebase) {
-                await db.cardapio.add({
-                    nome: prod.nome,
-                    preco: prod.preco,
-                    firebaseId: prod.firebaseId
-                });
-            }
-            if (document.getElementById('admin-cardapio').classList.contains('active')) {
-                await renderCardapioList();
-            }
+            for (const prod of produtosFirebase) await db.cardapio.add({ nome: prod.nome, preco: prod.preco, firebaseId: prod.firebaseId });
+            if (document.getElementById('admin-cardapio').classList.contains('active')) await renderCardapioList();
             console.log(`Cardápio sincronizado: ${produtosFirebase.length} itens`);
-        } catch (error) {
-            console.error("Erro ao carregar cardápio do Firebase:", error);
-            toast("Erro ao sincronizar cardápio com Firebase", "error");
-        }
+        } catch (error) { console.error("Erro ao carregar cardápio:", error); toast("Erro ao sincronizar cardápio", "error"); }
     }
 
     async function adicionarProdutoFirebase(nome, preco) {
         try {
-            const docRef = await addDoc(collection(dbFirestore, "produtos"), {
-                nome: nome,
-                preco: preco,
-                disponivel: true
-            });
-            await db.cardapio.add({
-                nome: nome,
-                preco: preco,
-                firebaseId: docRef.id
-            });
+            const docRef = await addDoc(collection(dbFirestore, "produtos"), { nome, preco, disponivel: true });
+            await db.cardapio.add({ nome, preco, firebaseId: docRef.id });
             await renderCardapioList();
-            toast("Item adicionado ao cardápio (Firebase sincronizado)", "success");
-        } catch (error) {
-            console.error("Erro ao adicionar produto no Firebase:", error);
-            toast("Erro ao sincronizar com Firebase", "error");
-            throw error;
-        }
+            toast("Item adicionado (Firebase)", "success");
+        } catch (error) { toast("Erro ao adicionar", "error"); throw error; }
     }
 
     async function removerProdutoFirebase(id_item, firebaseId) {
-        if (!firebaseId) {
-            toast("Erro: produto não possui ID do Firebase", "error");
-            return;
-        }
+        if (!firebaseId) { toast("Erro: sem ID Firebase", "error"); return; }
         try {
             await deleteDoc(doc(dbFirestore, "produtos", firebaseId));
             await db.cardapio.delete(id_item);
             await renderCardapioList();
-            toast("Item removido do cardápio (Firebase sincronizado)", "success");
-        } catch (error) {
-            console.error("Erro ao remover produto do Firebase:", error);
-            toast("Erro ao remover do Firebase", "error");
-        }
+            toast("Item removido (Firebase)", "success");
+        } catch (error) { toast("Erro ao remover", "error"); }
     }
 
     function escutarCardapioFirestore() {
-        const produtosRef = collection(dbFirestore, "produtos");
-        const q = query(produtosRef, where("disponivel", "==", true));
+        const q = query(collection(dbFirestore, "produtos"), where("disponivel", "==", true));
         onSnapshot(q, async (snapshot) => {
             const produtosFirebase = {};
-            snapshot.docs.forEach(doc => {
-                produtosFirebase[doc.id] = {
-                    nome: doc.data().nome,
-                    preco: doc.data().preco
-                };
-            });
-
+            snapshot.docs.forEach(doc => { produtosFirebase[doc.id] = { nome: doc.data().nome, preco: doc.data().preco }; });
             const locais = await db.cardapio.toArray();
             const locaisMap = {};
-            locais.forEach(item => {
-                if (item.firebaseId) locaisMap[item.firebaseId] = item;
-            });
-
+            locais.forEach(item => { if (item.firebaseId) locaisMap[item.firebaseId] = item; });
             for (const [id, data] of Object.entries(produtosFirebase)) {
-                if (!locaisMap[id]) {
-                    await db.cardapio.add({
-                        nome: data.nome,
-                        preco: data.preco,
-                        firebaseId: id
-                    });
-                } else if (locaisMap[id].nome !== data.nome || locaisMap[id].preco !== data.preco) {
-                    await db.cardapio.update(locaisMap[id].id_item, {
-                        nome: data.nome,
-                        preco: data.preco
-                    });
-                }
+                if (!locaisMap[id]) await db.cardapio.add({ nome: data.nome, preco: data.preco, firebaseId: id });
+                else if (locaisMap[id].nome !== data.nome || locaisMap[id].preco !== data.preco)
+                    await db.cardapio.update(locaisMap[id].id_item, { nome: data.nome, preco: data.preco });
             }
-
-            for (const local of locais) {
-                if (local.firebaseId && !produtosFirebase[local.firebaseId]) {
-                    await db.cardapio.delete(local.id_item);
-                }
-            }
-
-            if (document.getElementById('admin-cardapio').classList.contains('active')) {
-                await renderCardapioList();
-            }
-        }, (error) => {
-            console.error("Erro no snapshot do cardápio:", error);
-        });
+            for (const local of locais) if (local.firebaseId && !produtosFirebase[local.firebaseId]) await db.cardapio.delete(local.id_item);
+            if (document.getElementById('admin-cardapio').classList.contains('active')) await renderCardapioList();
+        }, (error) => console.error("Erro snapshot cardápio:", error));
     }
 
-    // Sobrescrever funções globais de cardápio
     window.adicionarItemCardapio = async function() {
         const nome = document.getElementById('novo-item-nome').value.trim();
         const preco = parseFloat(document.getElementById('novo-item-preco').value) || 0;
-        if (!nome) { toast('Informe o nome do item', 'error'); return; }
+        if (!nome) { toast('Informe o nome', 'error'); return; }
         await adicionarProdutoFirebase(nome, preco);
         document.getElementById('novo-item-nome').value = '';
         document.getElementById('novo-item-preco').value = '';
     };
-
     window.removerItemCardapio = async function(id_item) {
-        if (!confirm('Remover este item permanentemente?')) return;
+        if (!confirm('Remover permanentemente?')) return;
         const item = await db.cardapio.get(id_item);
         if (!item) { toast('Item não encontrado', 'error'); return; }
         await removerProdutoFirebase(id_item, item.firebaseId);
     };
 
-    // ------------------------------------------------------------
-    // 2. Escuta de novos pedidos no Firestore
-    // ------------------------------------------------------------
+    // Escuta de novos pedidos (CORRIGIDA)
     async function importarPedidoFirebase(pedidoDoc) {
         const pedidoId = pedidoDoc.id;
         if (importedPedidosIds.has(pedidoId)) return;
 
         const dados = pedidoDoc.data();
-        if (!dados.mesaId || !dados.itens || dados.itens.length === 0) return;
+        console.log("Novo pedido detectado:", dados);
+        if (!dados.mesaId || !dados.itens || !Array.isArray(dados.itens) || dados.itens.length === 0) return;
 
-        let identificacao = '';
-        let tipo = 'mesa';
-        if (dados.mesaId.toString().toLowerCase().includes('delivery')) {
-            identificacao = `Delivery - ${dados.mesaId}`;
-            tipo = 'delivery';
-        } else {
-            identificacao = `Mesa ${dados.mesaId}`;
-        }
+        const mesaIdStr = String(dados.mesaId);
+        let identificacao = '', tipo = 'mesa';
+        if (mesaIdStr.toLowerCase().includes('delivery')) { identificacao = `Delivery - ${mesaIdStr}`; tipo = 'delivery'; }
+        else { identificacao = `Mesa ${mesaIdStr}`; }
 
         const itensTexto = dados.itens.map(item => `${item.quantidade}x ${item.nome}`).join('\n');
         const valorTotal = dados.itens.reduce((acc, item) => acc + (item.precoUnitario * item.quantidade), 0);
 
         try {
-            let comanda = await db.comandas.where({ identificacao: identificacao, status: 'aberta' }).first();
+            let comanda = await db.comandas.where({ identificacao, status: 'aberta' }).first();
             let id_comanda;
-
             if (!comanda) {
-                id_comanda = await db.comandas.add({
-                    identificacao: identificacao,
-                    tipo: tipo,
-                    status: 'aberta',
-                    taxa_entrega: 0,
-                    data_abertura: Date.now(),
-                    data_fechamento: null
-                });
-            } else {
-                id_comanda = comanda.id_comanda;
-            }
+                id_comanda = await db.comandas.add({ identificacao, tipo, status: 'aberta', taxa_entrega: 0, data_abertura: Date.now(), data_fechamento: null });
+            } else id_comanda = comanda.id_comanda;
 
             await db.pedidos.add({
-                id_comanda: id_comanda,
-                identificacao: identificacao,
-                itens: itensTexto,
-                valor_total: valorTotal,
-                status: 'aguardando',
-                responsavel: null,
-                data_entrada: Date.now(),
-                data_inicio: null,
-                data_fim: null,
-                firebasePedidoId: pedidoId
+                id_comanda, identificacao, itens: itensTexto, valor_total: valorTotal,
+                status: 'aguardando', responsavel: null, data_entrada: Date.now(),
+                data_inicio: null, data_fim: null, firebasePedidoId: pedidoId
             });
-
             importedPedidosIds.add(pedidoId);
-            toast(`Novo pedido da ${identificacao} recebido!`, 'success');
+            toast(`🆕 Novo pedido da ${identificacao} recebido!`, 'success');
             await carregarTudo();
-        } catch (error) {
-            console.error("Erro ao importar pedido do Firebase:", error);
-        }
+        } catch (error) { console.error("Erro ao importar pedido:", error); toast("Erro ao processar pedido", "error"); }
     }
 
     function escutarPedidosFirestore() {
-        const pedidosRef = collection(dbFirestore, "pedidos");
-        const q = query(pedidosRef, where("status", "==", "pendente"), orderBy("criadoEm", "asc"));
+        const q = query(collection(dbFirestore, "pedidos"), where("status", "==", "pendente"));
         onSnapshot(q, (snapshot) => {
             snapshot.docChanges().forEach(async (change) => {
-                if (change.type === 'added') {
-                    await importarPedidoFirebase(change.doc);
-                }
+                if (change.type === 'added') await importarPedidoFirebase(change.doc);
             });
-        }, (error) => {
-            console.error("Erro ao escutar pedidos:", error);
-        });
+        }, (error) => { console.error("Erro no listener de pedidos:", error); toast("Erro ao conectar Firebase", "error"); });
     }
 
-    // ------------------------------------------------------------
-    // 3. Inicialização da integração
-    // ------------------------------------------------------------
     async function initFirebaseIntegration() {
         await carregarCardapioFirebase();
         escutarCardapioFirestore();
         escutarPedidosFirestore();
-
         const pedidosLocais = await db.pedidos.toArray();
-        pedidosLocais.forEach(p => {
-            if (p.firebasePedidoId) importedPedidosIds.add(p.firebasePedidoId);
-        });
+        pedidosLocais.forEach(p => { if (p.firebasePedidoId) importedPedidosIds.add(p.firebasePedidoId); });
+        console.log("Integração Firebase ativa.");
     }
-
-    initFirebaseIntegration().catch(err => console.error("Falha na integração Firebase:", err));
-</script>
-
-<script>
-// Chamada inicial do sistema (após todas as definições)
-window.addEventListener('DOMContentLoaded', init);
+    initFirebaseIntegration();
 </script>
 </body>
 </html>
